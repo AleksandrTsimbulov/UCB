@@ -1,0 +1,134 @@
+openapi: 3.0.0
+
+servers:
+
+  - description: classifier managment API
+    url: http://0.0.0.0:10000/api
+
+info:
+  description: This is a simple classifier API
+  version: "1.0.0"
+  title: API for classifier managment
+  contact:
+    email: worktsa@yandex.com
+
+paths:
+  /api:
+
+    get:
+      operationId: api.read
+      description: return subclassifier from the given path. If no path provided, return the whole classifier
+      parameters:
+        - in: query
+          name: record_path
+          description: full path to a specific record
+          required: false
+          schema:
+            type: string
+            example: /Software/System software/Operational System/
+      responses:
+        '200':
+          description: requested records read successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                          "name": "Modern birds",
+                          "path": "/root/biology/",
+                          "sub": [
+                          {
+                            "name": "bullfinch",
+                            "path": "/root/biology/Modern birds/"
+                          },
+                          {
+                            "name": "sky lark",
+                            "path": "/root/biology/Modern birds/"
+                          }
+                          ]
+                         }
+        '400':
+          description: bad input parameter
+        '404':
+          description: record not found
+
+    post:
+      operationId: api.add_record
+      description: adds new record.
+      responses:
+        '200':
+          description: record added
+        '400':
+          description: 'invalid input'
+        '409':
+          description: record already exist
+      requestBody:
+        required: true
+        description: record to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Record'
+
+    put:
+      operationId: api.change_record
+      description: changes record name
+      responses:
+        '200':
+          description: record name changed
+        '400':
+          description: 'invalid input'
+        '404':
+          description: record not found
+      requestBody:
+        required: true
+        description: record to be changed and it's new name
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  description: path to the parent record. Only existing path is allowed. Must start and and with '/'
+                  type: string
+                  example: /Software/System software/
+                name:
+                  description: name of the existing record
+                  type: string
+                  example: Operational system
+                new_name:
+                  description: new name of the record. Can't be empty, consists from one space or starts from unreadable symbol. Only latin, cyrillic letters and numbers are allowed, words can be separated with one and only one space. The word 'root' is reserved and can't be used.
+                  type: string
+                  example: Modern Operational System
+
+    delete:
+      operationId: api.remove
+      description: delete given record and all subrecords
+      responses:
+        '200':
+          description: record was deleted successfully
+        '400':
+          description: bad input parameter
+        '404':
+          description: no records found
+      requestBody:
+        required: true
+        description: record to be deleted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Record'
+
+components:
+  schemas:
+    Record:
+      type: object
+      properties:
+        path:
+          description: path to the parent record. Only existing path is allowed. Must start and and with '/'
+          type: string
+          example: /Software/System software/
+        name:
+          description: name of the record. Can't be empty, consists from one space or starts from unreadable symbol. Only latin, cyrillic letters and numbers are allowed, words can be separated with one and only one space. The word 'root' is reserved and can't be used.
+          type: string
+          example: Operational system
