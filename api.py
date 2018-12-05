@@ -44,7 +44,7 @@ def bad_request_400():
 
 
 def record_exist_409():
-    return 'record already exist', 409
+    return 'path not found or record already exist', 409
 
 
 def record_not_found_404():
@@ -83,6 +83,7 @@ def is_name_valid(name, path):
     prev_space = False
     for letter in name:
         if letter not in allowed_readable:
+            # check that space is only one
             if letter != space or prev_space:
                 return False
             prev_space = True
@@ -132,7 +133,7 @@ def read(record_path='/'):
 def add_record(body):
     """
     Adds record into classifier.
-    Only valid records will be added. Only records witch direct parents already exists can be added.
+    Only valid records will be added. Only records which direct parents already exist can be added.
     """
     name, path, db_path = get_name_and_paths_from_request(body)
     if not is_name_valid(name, path):

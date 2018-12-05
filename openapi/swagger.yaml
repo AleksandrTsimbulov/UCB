@@ -3,7 +3,7 @@ openapi: 3.0.0
 servers:
 
   - description: classifier managment API
-    url: http://0.0.0.0:10000/api
+    url: http://0.0.0.0:10000
 
 info:
   description: This is a simple classifier API
