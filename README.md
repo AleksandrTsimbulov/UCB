@@ -1,5 +1,5 @@
 Made by Aleksandr Tsimbulov in 03.12.2018 edited 06.12.2008
-Contacts: worktda@yandex.ru
+Contacts: worktsa@yandex.ru
 
 Service provides an API for creation, changing and deleting records to/from classifier type structures.
 Service works on local machine at http://0.0.0.0:10000/api. No frontend servers/services is implemented.
